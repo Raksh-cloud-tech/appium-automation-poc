@@ -1,0 +1,34 @@
+{
+  "name": "appium.automation.poc-vms",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test:mobile": "wdio run wdio.conf.ts",
+    "test:web": "playwright test",
+    "test:all": "npm run test:mobile && npm run test:web",
+    "report:allure": "allure generate reports/allure --clean -o reports/allure-report && allure open reports/allure-report",
+    "report:monocart": "npx monocart merge monocart-results --output monocart-report",
+    "allure:report": "powershell -ExecutionPolicy Bypass -File allure-history.ps1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@wdio/cli": "^9.23.2"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.57.0",
+    "@types/node": "^25.0.9",
+    "@wdio/allure-reporter": "^9.23.3",
+    "@wdio/appium-service": "^9.23.2",
+    "@wdio/globals": "^9.23.0",
+    "@wdio/local-runner": "^9.23.2",
+    "@wdio/mocha-framework": "^9.23.2",
+    "@wdio/spec-reporter": "^9.23.2",
+    "allure-commandline": "^2.36.0",
+    "appium": "^3.1.2",
+    "appium-uiautomator2-driver": "^6.7.10",
+    "expect-webdriverio": "^5.6.3"
+  }
+}
