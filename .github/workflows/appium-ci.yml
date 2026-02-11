@@ -44,7 +44,7 @@ jobs:
       - name: Start Appium Server
         shell: powershell
         run: |
-          Start-Process -NoNewWindow -FilePath "appium"
+          Start-Process -NoNewWindow -FilePath "npx" -ArgumentList "appium --log-level info"
           Start-Sleep -Seconds 20
 
       - name: Run Appium Tests
