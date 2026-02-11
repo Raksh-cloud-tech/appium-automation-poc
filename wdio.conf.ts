@@ -1,3 +1,5 @@
+import * as path from "path";
+
 export const config: WebdriverIO.Config = {
     //
     // ====================
@@ -65,7 +67,8 @@ export const config: WebdriverIO.Config = {
         "platformName": "Android",
         "appium:platformVersion": "15",
         "appium:deviceName": "Google Pixel Tablet ",
-        "appium:app": "./apk/app-release latest.apk",
+        // "appium:app": "./apk/app-release latest.apk",
+        'appium:app': path.join(process.cwd(), 'apk', 'app-release-latest.apk'),
         "appium:automationName": "UIAutomator2",
         'appium:autoGrantPermissions': true,
         'appium:autoAcceptAlerts': true
