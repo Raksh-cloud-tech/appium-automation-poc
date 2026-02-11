@@ -12,7 +12,7 @@ jobs:
     timeout-minutes: 60
 
     steps:
-      # 1. Checkout repository
+      # 1. Checkout repo
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -22,26 +22,25 @@ jobs:
         with:
           node-version: 20
 
-      # 3. Setup Java (Java 21 LTS)
+      # 3. Setup Java 25 (your version)
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 21
+          java-version: 25
 
-      # 4. Install npm dependencies
-      - name: Install dependencies
+      # 4. Install dependencies
+      - name: Install npm dependencies
         run: npm ci
 
-      # 5. Install Appium
+      # 5. Install Appium + driver
       - name: Install Appium
-        run: npm install -g appium
+        run: |
+          npm install -g appium
+          appium driver install uiautomator2
+          appium -v
 
-      # 6. Verify Appium
-      - name: Verify Appium
-        run: appium -v
-
-      # 7. Start Android Emulator
+      # 6. Start Android Emulator
       - name: Start Android Emulator
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -54,26 +53,34 @@ jobs:
             -no-audio
             -no-boot-anim
           disable-animations: true
-          script: echo "Android Emulator started"
+          script: |
+            adb devices
 
-      # 8. Start Appium Server
+      # 7. Download APK (REQUIRED)
+      # Replace with your real APK URL or artifact
+      - name: Download APK
+        run: |
+          mkdir -p apps
+          curl -L -o apps/app.apk https://YOUR_APK_URL/app.apk
+
+      # 8. Start Appium server
       - name: Start Appium Server
         run: |
-          appium --log-level error &
-          sleep 15
+          appium --log-level info &
+          sleep 20
 
-      # 9. Run Appium Tests (WDIO)
+      # 9. Run Appium tests
       - name: Run Appium Tests
         run: npm run test:mobile
 
-      # 10. Generate Allure Report
+      # 10. Generate Allure report
       - name: Generate Allure Report
         if: always()
         run: |
           npm install -g allure-commandline
           allure generate allure-results --clean -o allure-report || true
 
-      # 11. Upload Allure Report
+      # 11. Upload Allure report
       - name: Upload Allure Report
         if: always()
         uses: actions/upload-artifact@v4
