@@ -12,8 +12,8 @@ jobs:
     timeout-minutes: 60
 
     steps:
-      # 1. Checkout repo
-      - name: Checkout code
+      # 1. Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       # 2. Setup Node.js
@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: 20
 
-      # 3. Setup Java 25 (your version)
+      # 3. Setup Java (required for Android)
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
@@ -48,39 +48,27 @@ jobs:
           target: google_apis
           arch: x86_64
           profile: Nexus 6
-          emulator-options: >
-            -no-window
-            -no-audio
-            -no-boot-anim
           disable-animations: true
-          script: |
-            adb devices
+          script: adb devices
 
-      # 7. Download APK (REQUIRED)
-      # Replace with your real APK URL or artifact
-      - name: Download APK
-        run: |
-          mkdir -p apps
-          curl -L -o apps/app.apk https://YOUR_APK_URL/app.apk
-
-      # 8. Start Appium server
+      # 7. Start Appium server
       - name: Start Appium Server
         run: |
           appium --log-level info &
           sleep 20
 
-      # 9. Run Appium tests
+      # 8. Run Appium tests (THIS WAS MISSING BEFORE)
       - name: Run Appium Tests
         run: npm run test:mobile
 
-      # 10. Generate Allure report
+      # 9. Generate Allure Report
       - name: Generate Allure Report
         if: always()
         run: |
           npm install -g allure-commandline
           allure generate allure-results --clean -o allure-report || true
 
-      # 11. Upload Allure report
+      # 10. Upload Allure Report
       - name: Upload Allure Report
         if: always()
         uses: actions/upload-artifact@v4
