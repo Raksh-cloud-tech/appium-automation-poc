@@ -65,7 +65,7 @@ export const config: WebdriverIO.Config = {
         "platformName": "Android",
         "appium:platformVersion": "15",
         "appium:deviceName": "Google Pixel Tablet ",
-        "appium:app": "C:\\Users\\rakshithp\\Downloads\\app-release.apk",
+        "appium:app": "./apk/app-release latest.apk",
         "appium:automationName": "UIAutomator2",
         'appium:autoGrantPermissions': true,
         'appium:autoAcceptAlerts': true
