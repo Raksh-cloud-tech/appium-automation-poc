@@ -1,88 +1,69 @@
-# name: Appium Automation CI
+name: Appium Automation CI
 
-# on:
-#   push:
-#     branches: [ "main" ]
-#   workflow_dispatch:
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
 
-# jobs:
-#   appium-tests:
-#     runs-on: self-hosted
+jobs:
+  appium-tests:
+    runs-on: self-hosted
 
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v4
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-#       - name: Setup Node.js
-#         uses: actions/setup-node@v4
-#         with:
-#           node-version: 20
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
-#       - name: Setup Java
-#         uses: actions/setup-java@v4
-#         with:
-#           distribution: temurin
-#           java-version: 25
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 25
 
-#       - name: Install dependencies
-#         run: npm install
+      - name: Install project dependencies
+        shell: powershell
+        run: npm install
 
-#       - name: Verify environment
-#         run: |
-#           node -v
-#           npm -v
-#           java -version
-#           adb devices
-#           appium -v
+      - name: Install Appium
+        shell: powershell
+        run: npm install -g appium
 
-#       - name: Start Appium Server
-#         run: |
-#           appium --log-level info &
-#           timeout /t 20
+      - name: Verify environment
+        shell: powershell
+        run: |
+          node -v
+          npm -v
+          java -version
+          adb devices
+          appium -v
 
-#       - name: Run Appium Tests
-#         run: npm run test:mobile
+      - name: Start Appium Server
+        shell: powershell
+        run: |
+          Start-Process -NoNewWindow -FilePath "appium"
+          Start-Sleep -Seconds 20
 
-#       - name: Generate Allure Report
-#         if: always()
-#         run: |
-#           allure generate allure-results --clean -o allure-report --clean
+      - name: Run Appium Tests
+        shell: powershell
+        run: npm run test:mobile
 
-#       - name: Upload Allure Report
-#         if: always()
-#         uses: actions/upload-artifact@v4
-#         with:
-#           name: allure-report
-#           path: allure-report
-- name: Verify environment
-  run: |
-    node -v
-    npm -v
-    java -version
-    adb devices
-    appium -v
-    allure --version
+      - name: Generate Allure Report
+        if: always()
+        shell: powershell
+        run: |
+          if (Test-Path "allure-results") {
+            npx allure generate allure-results -o allure-report --clean
+          } else {
+            Write-Host "No allure-results found"
+          }
 
-- name: Start Appium Server
-  run: |
-    Start-Process appium
-    Start-Sleep -Seconds 20
-
-- name: Run Appium Tests
-  run: npm run test:mobile
-
-- name: Generate Allure Report
-  if: always()
-  run: |
-    if (Test-Path allure-results) {
-      allure generate allure-results --clean -o allure-report
-    } else {
-      Write-Host "No allure-results found"
-    }
-
-- name: Upload Allure Report
-  if: always()
-  uses: actions/upload-artifact@v4
-  with:
-    name: allure-report
-    path: allure-report
+      - name: Upload Allure Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: allure-report
