@@ -64,16 +64,24 @@ export const config: WebdriverIO.Config = {
         // //     //     'appium:autoAcceptAlerts': true
         // //     // },
         // //     // {
-        "platformName": "Android",
-        "appium:platformVersion": "15",
-        "appium:deviceName": "Google Pixel Tablet ",
-        // "appium:app": "./apk/app-release latest.apk",
-        'appium:app': path.join(process.cwd(), 'apk', 'app-release-latest.apk'),
-        "appium:automationName": "UIAutomator2",
-        'appium:autoGrantPermissions': true,
-        'appium:autoAcceptAlerts': true
+        //     "platformName": "Android",
+        //     "appium:platformVersion": "15",
+        //     "appium:deviceName": "Google Pixel Tablet ",
+        //     // "appium:app": "./apk/app-release latest.apk",
+        //     'appium:app': path.join(process.cwd(), 'apk', 'app-release-latest.apk'),
+        //     "appium:automationName": "UIAutomator2",
+        //     'appium:autoGrantPermissions': true,
+        //     'appium:autoAcceptAlerts': true
 
-    }],
+        // }],
+
+        platformName: 'Android',
+        'appium:automationName': 'UiAutomator2',
+        'appium:deviceName': 'Android',
+        'appium:app': './app-release-latest.apk',
+        'appium:newCommandTimeout': 300
+    }
+    ],
 
     //real device
 
